@@ -1,0 +1,14 @@
+---
+interface Props {
+  summary: string;
+}
+
+const { summary } = Astro.props;
+---
+
+<div class="bg-primary-50 border-l-4 border-primary-700 rounded-r-lg p-6 my-8">
+  <h4 class="font-sans text-xs uppercase tracking-widest font-bold text-primary-700 mb-2">Key Findings</h4>
+  <p class="text-lg font-serif leading-relaxed text-primary-900">
+    {summary}
+  </p>
+</div>

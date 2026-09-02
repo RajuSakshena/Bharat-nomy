@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import aboutContent from '../content/pages/about.json';
+---
+
+<BaseLayout title={aboutContent.title}>
+  <div class="max-w-4xl mx-auto px-6 py-16">
+    <h1 class="text-4xl font-bold font-serif text-primary-900 mb-6">{aboutContent.title}</h1>
+    <p class="text-xl text-text-secondary leading-relaxed mb-12">{aboutContent.intro}</p>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-primary-800 mb-4 border-b border-primary-200 pb-2">Our Mission</h2>
+      <p class="text-lg text-text-primary leading-relaxed">{aboutContent.missionFull}</p>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-primary-800 mb-4 border-b border-primary-200 pb-2">Editorial Standards</h2>
+      <div class="prose prose-stone prose-lg text-text-primary">
+        <p>{aboutContent.editorialStandards}</p>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-primary-800 mb-4 border-b border-primary-200 pb-2">Our Team</h2>
+      <p class="text-lg text-text-primary leading-relaxed">{aboutContent.teamDescription}</p>
+    </section>
+
+    <section class="bg-primary-50 p-6 rounded-lg border border-primary-100">
+      <h2 class="text-xl font-bold text-primary-900 mb-3">Our Commitment to Discourse</h2>
+      <p class="text-text-secondary font-medium">{aboutContent.antiAudienceStatement}</p>
+    </section>
+  </div>
+</BaseLayout>

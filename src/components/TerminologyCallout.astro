@@ -1,0 +1,19 @@
+---
+interface Props {
+  term: string;
+  definition: string;
+}
+
+const { term, definition } = Astro.props;
+---
+
+<div class="bg-brown-50 border-l-4 border-brown-600 rounded-r-lg p-5 my-6">
+  <div class="flex items-center gap-2 mb-1">
+    <span aria-hidden="true">📖</span>
+    <span class="font-sans text-xs uppercase tracking-widest font-semibold text-brown-700">Terminology</span>
+  </div>
+  <p class="mt-1">
+    <strong class="font-bold text-brown-800 text-base">{term}:</strong>
+    <span class="text-text-secondary text-base leading-relaxed pl-1">{definition}</span>
+  </p>
+</div>

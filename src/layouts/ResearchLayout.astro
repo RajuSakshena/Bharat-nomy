@@ -1,0 +1,46 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import ThesisSummary from '../components/ThesisSummary.astro';
+import CitationAnchor from '../components/CitationAnchor.astro';
+
+const { title, summary, authors, date, category, citations } = Astro.props;
+const formattedDate = date.toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<BaseLayout title={title} description={summary}>
+  <article class="max-w-4xl mx-auto px-6 py-12">
+    <header class="mb-8 border-b border-primary-200 pb-8">
+      <span class="inline-block bg-primary-100 text-primary-800 uppercase tracking-wider text-xs font-bold px-3 py-1 rounded-full mb-4">
+        {category}
+      </span>
+      <h1 class="text-4xl font-bold font-serif text-primary-900 leading-tight mb-4">{title}</h1>
+      <div class="flex flex-wrap items-center text-text-secondary text-sm space-x-4">
+        <span>By {authors.join(', ')}</span>
+        <span>•</span>
+        <time datetime={date.toISOString()}>{formattedDate}</time>
+      </div>
+    </header>
+
+    <ThesisSummary summary={summary} />
+
+    <div class="prose prose-stone prose-lg max-w-none text-text-primary leading-relaxed mt-10">
+      <slot />
+    </div>
+
+    {citations && citations.length > 0 && (
+      <footer class="mt-16 pt-8 border-t border-stone-200">
+        <h3 class="text-2xl font-bold font-serif text-primary-900 mb-6">References</h3>
+        <ol class="list-decimal list-outside ml-6 space-y-4 text-sm text-text-secondary">
+          {citations.map((cite) => (
+            <li id={`ref-${cite.id}`} class="pl-2">
+              <span class="text-text-primary">{cite.text}</span>
+              <a href={`#cite-${cite.id}`} class="text-primary-700 hover:underline ml-2" aria-label="Back to content">
+                ↩
+              </a>
+            </li>
+          ))}
+        </ol>
+      </footer>
+    )}
+  </article>
+</BaseLayout>

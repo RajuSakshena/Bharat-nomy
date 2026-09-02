@@ -1,0 +1,12 @@
+{
+  "title": "Industrial Emission Compliance Rates by State (2020-2024)",
+  "description": "Annual report detailing compliance and violation rates for major industrial units under the Continuous Emission Monitoring System (CEMS).",
+  "source": "Central Pollution Control Board (CPCB)",
+  "sourceUrl": "https://cpcb.nic.in/",
+  "format": "pdf",
+  "file": "/uploads/datasets/industrial-emission-compliance.pdf",
+  "date": "2026-01-10",
+  "category": "Environmental Policy",
+  "license": "Government Open Data License - India (GODL)",
+  "methodology": "Derived from physical inspections and CEMS data submitted to SPCBs. Includes data on show-cause notices and closure orders."
+}

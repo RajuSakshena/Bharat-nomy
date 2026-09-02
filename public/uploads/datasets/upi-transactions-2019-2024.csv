@@ -1,0 +1,13 @@
+year,month,state,transaction_type,volume_mn,value_inr_cr
+2024,12,Maharashtra,P2M,482.5,38920.4
+2024,12,Maharashtra,P2P,320.1,45100.8
+2024,12,Karnataka,P2M,395.2,32150.6
+2024,12,Karnataka,P2P,280.4,39400.1
+2024,12,Tamil Nadu,P2M,340.8,27890.3
+2024,12,Tamil Nadu,P2P,230.5,31200.7
+2024,12,Uttar Pradesh,P2M,410.3,28450.2
+2024,12,Uttar Pradesh,P2P,390.6,41300.9
+2024,12,Gujarat,P2M,290.4,24800.5
+2024,12,Gujarat,P2P,210.2,29500.3
+2024,12,Bihar,P2M,185.6,12400.8
+2024,12,Bihar,P2P,220.3,21900.4

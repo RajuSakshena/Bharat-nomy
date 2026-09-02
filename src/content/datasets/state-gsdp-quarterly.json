@@ -1,0 +1,12 @@
+{
+  "title": "Quarterly Gross State Domestic Product (GSDP) Estimates",
+  "description": "Time-series data of GSDP estimates across 28 states and union territories, at constant and current prices.",
+  "source": "Reserve Bank of India Handbook of Statistics",
+  "sourceUrl": "https://rbi.org.in/",
+  "format": "csv",
+  "file": "/uploads/datasets/state-gsdp-quarterly.csv",
+  "date": "2025-11-20",
+  "category": "Macroeconomics",
+  "license": "CC-BY-4.0",
+  "methodology": "Compiled from RBI Handbook of Statistics on Indian States. Constant prices use 2011-12 as the base year."
+}

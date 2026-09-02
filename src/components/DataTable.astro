@@ -1,0 +1,40 @@
+---
+interface Props {
+  headers: string[];
+  rows: string[][];
+  caption?: string;
+  source?: string;
+}
+
+const { headers, rows, caption, source } = Astro.props;
+---
+
+<div class="my-6">
+  <div class="overflow-x-auto border border-stone-200 rounded-lg">
+    <table class="w-full border-collapse">
+      <thead class="bg-primary-900 text-white">
+        <tr>
+          {headers.map((header) => (
+            <th class="px-4 py-3 text-left font-sans text-sm font-semibold uppercase tracking-wider">{header}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, i) => (
+          <tr class={i % 2 === 0 ? 'bg-white' : 'bg-stone-50'}>
+            {row.map((cell) => (
+              <td class="px-4 py-3 border-b border-stone-100 text-base font-serif text-text-primary">{cell}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  
+  {(caption || source) && (
+    <div class="mt-2 flex flex-col gap-1">
+      {caption && <p class="text-sm text-text-muted font-sans italic">{caption}</p>}
+      {source && <p class="text-xs text-text-muted font-sans">Source: {source}</p>}
+    </div>
+  )}
+</div>

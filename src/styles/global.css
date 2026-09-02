@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: 'Merriweather', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+  --color-brown-50: #efebe9;
+  --color-brown-100: #d7ccc8;
+  --color-brown-200: #bcaaa4;
+  --color-brown-600: #5d4037;
+  --color-brown-700: #4e342e;
+  --color-brown-800: #3e2723;
+  --color-brown-900: #2c1a12;
+  --color-bg: #faf8f5;
+  --color-surface: #ffffff;
+  --color-text-primary: #1c1917;
+  --color-text-secondary: #57534e;
+  --color-text-muted: #78716c;
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-serif);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+}
+
+/* Prose content styling */
+.prose h2 { @apply text-2xl font-bold text-primary-900 mt-10 mb-4; }
+.prose h3 { @apply text-xl font-bold text-primary-800 mt-8 mb-3; }
+.prose p { @apply text-lg leading-relaxed mb-6 text-text-primary; }
+.prose ul, .prose ol { @apply text-lg leading-relaxed mb-6 pl-6; }
+.prose li { @apply mb-2; }
+.prose blockquote { @apply border-l-4 border-primary-600 pl-6 py-2 my-6 bg-primary-50 rounded-r-lg italic; }
+.prose a { @apply text-primary-700 underline decoration-primary-300 hover:decoration-primary-700 transition-colors; }
+.prose table { @apply w-full border-collapse my-6; }
+.prose th { @apply bg-primary-900 text-white text-left px-4 py-3 font-sans text-sm font-semibold uppercase tracking-wider; }
+.prose td { @apply px-4 py-3 border-b border-stone-200 text-base; }
+.prose tr:nth-child(even) { @apply bg-stone-50; }

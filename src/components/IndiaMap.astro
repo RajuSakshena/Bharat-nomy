@@ -1,0 +1,14 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<img 
+  src="/images/india-political-map.jpg" 
+  alt="Political map of India showing all states and union territories" 
+  class={`rounded-lg shadow-lg ${className || ''}`} 
+  loading="lazy" 
+/>

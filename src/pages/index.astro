@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import homepageData from '../content/pages/homepage.json';
+import ResearchCard from '../components/ResearchCard.astro';
+import DatasetCard from '../components/DatasetCard.astro';
+import IndiaMap from '../components/IndiaMap.astro';
+
+const allResearch = await getCollection('research', (entry) => entry.data.status === 'published');
+const latestResearch = allResearch.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 3);
+
+const allDatasets = await getCollection('datasets');
+const latestDatasets = allDatasets.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 3);
+---
+
+<BaseLayout title="Home">
+  {/* HERO SECTION */}
+  <section class="bg-primary-900 text-white py-20">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <h1 class="text-5xl font-bold font-serif leading-tight mb-6">{homepageData.heroTitle}</h1>
+        <p class="text-xl text-primary-200 mb-8 leading-relaxed">{homepageData.heroSubtitle}</p>
+        <a href="/research" class="inline-block bg-white text-primary-900 hover:bg-primary-50 rounded-md px-6 py-3 font-medium transition-colors">
+          Explore Research &rarr;
+        </a>
+      </div>
+      <div class="hidden lg:block relative h-[400px]">
+        <IndiaMap class="w-full h-full object-cover rounded-xl shadow-2xl opacity-90 mix-blend-luminosity" />
+      </div>
+    </div>
+  </section>
+
+  {/* MISSION SECTION */}
+  <section class="bg-bg py-24">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-3xl font-serif text-text-primary leading-relaxed mb-6">"{homepageData.missionStatement}"</h2>
+      <p class="text-lg text-text-secondary">{homepageData.missionDetail}</p>
+    </div>
+  </section>
+
+  {/* LATEST RESEARCH */}
+  <section class="py-20 px-6 max-w-7xl mx-auto">
+    <div class="flex justify-between items-end mb-10 border-b border-stone-200 pb-4">
+      <h2 class="text-3xl font-bold font-serif text-primary-900">Latest Research</h2>
+      <a href="/research" class="text-primary-700 hover:underline font-medium">View All &rarr;</a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {latestResearch.map(entry => (
+        <ResearchCard 
+          title={entry.data.title}
+          summary={entry.data.summary}
+          date={entry.data.date}
+          category={entry.data.category}
+          authors={entry.data.authors}
+          slug={`/research/${entry.id}`}
+        />
+      ))}
+    </div>
+  </section>
+
+  {/* LATEST DATASETS */}
+  <section class="bg-surface py-20">
+    <div class="px-6 max-w-7xl mx-auto">
+      <div class="flex justify-between items-end mb-10 border-b border-stone-200 pb-4">
+        <h2 class="text-3xl font-bold font-serif text-primary-900">Latest Datasets</h2>
+        <a href="/datasets" class="text-primary-700 hover:underline font-medium">View All &rarr;</a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {latestDatasets.map(entry => (
+          <DatasetCard 
+            title={entry.data.title}
+            description={entry.data.description}
+            format={entry.data.format}
+            source={entry.data.source}
+            file={entry.data.file}
+            date={entry.data.date}
+            slug={`/datasets/${entry.id}`}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* FOR WHOM SECTION */}
+  <section class="py-24 bg-bg">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="bg-surface border border-stone-200 rounded-xl p-10 shadow-sm flex flex-col items-start">
+        <span class="text-4xl mb-6">🏛️</span>
+        <h3 class="text-2xl font-bold text-primary-900 mb-4">{homepageData.civicHubTitle}</h3>
+        <p class="text-text-secondary mb-8 flex-grow">{homepageData.civicHubDescription}</p>
+        <a href="/civic-hub" class="text-primary-700 hover:underline font-medium font-sans">Explore Civic Hub &rarr;</a>
+      </div>
+      <div class="bg-surface border border-stone-200 rounded-xl p-10 shadow-sm flex flex-col items-start">
+        <span class="text-4xl mb-6">📊</span>
+        <h3 class="text-2xl font-bold text-primary-900 mb-4">{homepageData.marketPortalTitle}</h3>
+        <p class="text-text-secondary mb-8 flex-grow">{homepageData.marketPortalDescription}</p>
+        <a href="/market-portal" class="text-primary-700 hover:underline font-medium font-sans">Explore Market Portal &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  {/* EDITORIAL PRINCIPLES */}
+  <section class="bg-primary-50 py-24 border-t border-primary-100">
+    <div class="max-w-4xl mx-auto px-6">
+      <h2 class="text-3xl font-bold font-serif text-primary-900 mb-10 text-center">Our Editorial Standards</h2>
+      <ul class="space-y-4">
+        {homepageData.editorialPrinciples.map(principle => (
+          <li class="flex items-start">
+            <svg class="w-6 h-6 text-primary-600 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <span class="text-lg text-text-primary">{principle}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

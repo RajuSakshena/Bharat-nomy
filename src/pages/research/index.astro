@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import ResearchCard from '../../components/ResearchCard.astro';
+import CategoryFilter from '../../components/CategoryFilter.astro';
+
+const allResearch = await getCollection('research', (entry) => entry.data.status === 'published');
+const sortedResearch = allResearch.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const activeCategory = Astro.url.searchParams.get('category') || undefined;
+
+const filteredResearch = activeCategory
+  ? sortedResearch.filter(entry => entry.data.category.toLowerCase() === activeCategory.toLowerCase())
+  : sortedResearch;
+---
+
+<BaseLayout title="Research" description="Explore evidence-based research on Indian law, economics, and policy.">
+  <div class="max-w-7xl mx-auto px-6 py-12">
+    <header class="mb-12">
+      <h1 class="text-4xl font-bold font-serif text-primary-900 mb-4">Research Hub</h1>
+      <p class="text-xl text-text-secondary max-w-3xl">Comprehensive, interdisciplinary analysis spanning law, economics, public policy, and finance.</p>
+    </header>
+
+    <div class="mb-8 border-b border-stone-200 pb-4">
+      <CategoryFilter categories={['Law', 'Economics', 'Policy', 'Finance']} activeCategory={activeCategory} basePath="/research" />
+    </div>
+
+    {filteredResearch.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredResearch.map(entry => (
+          <ResearchCard 
+            title={entry.data.title}
+            summary={entry.data.summary}
+            date={entry.data.date}
+            category={entry.data.category}
+            authors={entry.data.authors}
+            slug={`/research/${entry.id}`}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="py-12 text-center text-text-muted">
+        <p class="text-lg">No research papers found.</p>
+      </div>
+    )}
+  </div>
+</BaseLayout>

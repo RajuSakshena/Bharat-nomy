@@ -1,0 +1,78 @@
+backend:
+  name: github
+  repo: owner/bharatki-economy # TODO: replace 'owner' with actual GitHub username/org
+  branch: main
+local_backend: true
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "research"
+    label: "Research"
+    folder: "src/content/research"
+    format: "frontmatter"
+    extension: "md"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Authors", name: "authors", widget: "list", field: { label: "Author", name: "author", widget: "string" } }
+      - { label: "Summary", name: "summary", widget: "text", hint: "3-4 plain-language sentences" }
+      - { label: "Category", name: "category", widget: "select", options: ["law", "economics", "policy", "finance"] }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+      - label: "Citations"
+        name: "citations"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "ID", name: "id", widget: "number", value_type: "int" }
+          - { label: "Text", name: "text", widget: "string" }
+      - { label: "Status", name: "status", widget: "select", options: ["draft", "published"] }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "datasets"
+    label: "Datasets"
+    folder: "src/content/datasets"
+    format: "json"
+    extension: "json"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Source", name: "source", widget: "string" }
+      - { label: "Source URL", name: "sourceUrl", widget: "string", required: false }
+      - { label: "Format", name: "format", widget: "select", options: ["csv", "json", "pdf"] }
+      - { label: "File", name: "file", widget: "file", media_folder: "public/uploads/datasets", public_folder: "/uploads/datasets" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Category", name: "category", widget: "string" }
+      - { label: "License", name: "license", widget: "string", default: "CC-BY-4.0" }
+      - { label: "Methodology", name: "methodology", widget: "text", required: false }
+
+  - name: "site"
+    label: "Site Content"
+    editor:
+      preview: false
+    files:
+      - name: "homepage"
+        label: "Homepage"
+        file: "src/content/pages/homepage.json"
+        fields:
+          - { label: "Hero Title", name: "heroTitle", widget: "string" }
+          - { label: "Hero Subtitle", name: "heroSubtitle", widget: "text" }
+          - { label: "Mission Statement", name: "missionStatement", widget: "text" }
+          - { label: "Mission Detail", name: "missionDetail", widget: "text", required: false }
+          - { label: "Civic Hub Title", name: "civicHubTitle", widget: "string" }
+          - { label: "Civic Hub Description", name: "civicHubDescription", widget: "text" }
+          - { label: "Market Portal Title", name: "marketPortalTitle", widget: "string" }
+          - { label: "Market Portal Description", name: "marketPortalDescription", widget: "text" }
+          - { label: "Editorial Principles", name: "editorialPrinciples", widget: "list", field: { label: "Principle", name: "principle", widget: "string" } }
+      - name: "about"
+        label: "About Page"
+        file: "src/content/pages/about.json"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Intro", name: "intro", widget: "text" }
+          - { label: "Mission Full", name: "missionFull", widget: "markdown" }
+          - { label: "Editorial Standards", name: "editorialStandards", widget: "markdown" }
+          - { label: "Team Description", name: "teamDescription", widget: "markdown" }
+          - { label: "Anti Audience Statement", name: "antiAudienceStatement", widget: "text" }

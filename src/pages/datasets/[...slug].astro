@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import ResearchCard from '../../components/ResearchCard.astro';
+
+export async function getStaticPaths() {
+  const datasetEntries = await getCollection('datasets');
+  return datasetEntries.map(entry => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { title, description, source, sourceUrl, format, file, date, category, license, methodology } = entry.data;
+const formattedDate = date.toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const allResearch = await getCollection('research', (r) => r.data.status === 'published' && r.data.category === category);
+---
+
+<BaseLayout title={`${title} | Datasets`} description={description}>
+  <div class="max-w-4xl mx-auto px-6 py-12">
+    <a href="/datasets" class="text-primary-700 hover:underline mb-8 inline-block text-sm font-medium">← Back to Datasets</a>
+    
+    <div class="bg-surface border border-stone-200 rounded-xl p-8 mb-12 shadow-sm">
+      <div class="flex items-center space-x-3 mb-4">
+        <span class="bg-primary-100 text-primary-800 text-xs font-bold px-2 py-1 rounded uppercase tracking-wide">{format}</span>
+        <span class="text-stone-500 text-sm">{category}</span>
+      </div>
+      
+      <h1 class="text-3xl font-bold font-serif text-primary-900 mb-4">{title}</h1>
+      <p class="text-lg text-text-secondary mb-6 leading-relaxed">{description}</p>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8 text-sm border-t border-b border-stone-100 py-6">
+        <div>
+          <strong class="block text-stone-500 mb-1 uppercase tracking-wider text-xs">Source</strong>
+          {sourceUrl ? (
+            <a href={sourceUrl} target="_blank" rel="noopener noreferrer" class="text-primary-700 hover:underline">{source}</a>
+          ) : (
+            <span class="text-text-primary">{source}</span>
+          )}
+        </div>
+        <div>
+          <strong class="block text-stone-500 mb-1 uppercase tracking-wider text-xs">Last Updated</strong>
+          <span class="text-text-primary">{formattedDate}</span>
+        </div>
+        <div>
+          <strong class="block text-stone-500 mb-1 uppercase tracking-wider text-xs">License</strong>
+          <span class="text-text-primary">{license}</span>
+        </div>
+      </div>
+      
+      {methodology && (
+        <div class="mb-8">
+          <strong class="block text-stone-900 mb-2 font-medium">Methodology Notes</strong>
+          <p class="text-stone-700 text-sm leading-relaxed">{methodology}</p>
+        </div>
+      )}
+      
+      <a href={file} download class="inline-block bg-primary-800 hover:bg-primary-900 text-white rounded-md px-6 py-3 font-medium transition-colors">
+        Download Dataset ({format.toUpperCase()})
+      </a>
+    </div>
+
+    {allResearch.length > 0 && (
+      <div>
+        <h2 class="text-2xl font-bold font-serif text-primary-900 mb-6">Related Research</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {allResearch.slice(0,2).map(r => (
+            <ResearchCard 
+              title={r.data.title}
+              summary={r.data.summary}
+              date={r.data.date}
+              category={r.data.category}
+              authors={r.data.authors}
+              slug={`/research/${r.id}`}
+            />
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</BaseLayout>

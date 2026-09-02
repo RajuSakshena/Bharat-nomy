@@ -1,0 +1,18 @@
+{
+  "heroTitle": "Evidence-Based Research for India's Economic Future",
+  "heroSubtitle": "Interdisciplinary analysis spanning law, economics, public policy, and finance. Rigorous research accessible to every citizen.",
+  "missionStatement": "BharatkiEconomy exists to democratize high-rigor research, datasets, and economic insights for Indian citizens and market actors.",
+  "missionDetail": "We combine law, economics, policy, and finance into an interdisciplinary, evidence-based research portal. Every claim is verified. Every dataset is open. Every analysis serves the public interest.",
+  "civicHubTitle": "For Civic Actors",
+  "civicHubDescription": "Research briefs tailored for informed voters, civic advocates, students, and youth. Complex policy made accessible through plain-language summaries and verified data.",
+  "marketPortalTitle": "For Market Actors",
+  "marketPortalDescription": "Analytical research for impact investors, VC fund managers, corporate ESG teams, and financial analysts. Evidence-driven insights into regulatory trends and economic indicators.",
+  "editorialPrinciples": [
+    "Every publication opens with a plain-language summary of 3-4 sentences",
+    "All data points paired with inline primary source citations",
+    "Zero tolerance for unverified claims or sensationalized language",
+    "Technical terms isolated in dedicated terminology callout boxes",
+    "No partisan political messaging or clickbait patterns",
+    "All datasets published under open-access licenses"
+  ]
+}

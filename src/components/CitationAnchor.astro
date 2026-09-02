@@ -1,0 +1,19 @@
+---
+interface Props {
+  id: number;
+  reference: string;
+}
+
+const { id, reference } = Astro.props;
+---
+
+<sup>
+  <a 
+    href={`#cite-${id}`} 
+    id={`ref-${id}`} 
+    class="text-primary-600 hover:text-primary-800 font-sans text-xs font-bold cursor-pointer" 
+    title={reference}
+  >
+    [{id}]
+  </a>
+</sup>

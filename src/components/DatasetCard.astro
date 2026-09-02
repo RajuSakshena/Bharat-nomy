@@ -1,0 +1,50 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  format: string;
+  source: string;
+  file: string;
+  date: Date;
+  slug: string;
+}
+
+const { title, description, format, source, file, date, slug } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  day: '2-digit',
+  month: 'long',
+  year: 'numeric'
+});
+
+const formatColors: Record<string, string> = {
+  csv: 'bg-green-100 text-green-800',
+  json: 'bg-blue-100 text-blue-800',
+  pdf: 'bg-red-100 text-red-800'
+};
+
+const badgeColor = formatColors[format.toLowerCase()] || 'bg-gray-100 text-gray-800';
+const linkHref = slug.startsWith('/') ? slug : `/datasets/${slug}`;
+---
+
+<div class="bg-white border border-stone-200 rounded-lg p-5 flex flex-col h-full">
+  <div class="flex justify-between items-start mb-3 gap-4">
+    <a href={linkHref} class="group">
+      <h3 class="text-lg font-bold text-primary-900 font-serif group-hover:text-primary-700 transition-colors">{title}</h3>
+    </a>
+    <span class={`font-sans text-xs font-bold uppercase px-2.5 py-1 rounded shrink-0 ${badgeColor}`}>
+      {format}
+    </span>
+  </div>
+  <p class="text-text-secondary text-sm leading-relaxed line-clamp-2 mb-3 flex-grow">{description}</p>
+  <div class="mb-4">
+    <span class="text-text-muted text-xs font-sans">Source: {source}</span>
+  </div>
+  <div class="mt-auto flex justify-between items-center border-t border-stone-100 pt-3">
+    <time datetime={date.toISOString()} class="font-sans text-xs text-text-muted">{formattedDate}</time>
+    <a href={file} download class="text-primary-700 hover:text-primary-900 font-sans text-sm font-medium flex items-center gap-1 transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+      Download
+    </a>
+  </div>
+</div>

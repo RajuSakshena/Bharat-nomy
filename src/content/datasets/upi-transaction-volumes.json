@@ -1,0 +1,12 @@
+{
+  "title": "UPI Monthly Transaction Volumes by State (2019-2024)",
+  "description": "Comprehensive monthly dataset of UPI transaction volumes and values, broken down by state and transaction type (P2P vs P2M).",
+  "source": "National Payments Corporation of India (NPCI)",
+  "sourceUrl": "https://www.npci.org.in/",
+  "format": "csv",
+  "file": "/uploads/datasets/upi-transactions-2019-2024.csv",
+  "date": "2025-08-15",
+  "category": "Financial Inclusion",
+  "license": "Open Data Commons Open Database License (ODbL)",
+  "methodology": "Data aggregated from NPCI monthly reports. Transaction values are reported in INR Crores."
+}
