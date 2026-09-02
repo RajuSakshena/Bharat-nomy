@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@astrojs/react';
 
 export default defineConfig({
-  site: 'https://bharatki-economy.vercel.app',
+  site: 'https://bharatkieconomy.vercel.app/',
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
