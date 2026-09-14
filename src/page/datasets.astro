@@ -1,0 +1,103 @@
+---
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+/* =========================================================================
+   PAGE METADATA (as previously passed to BaseLayout from datasets/index.astro)
+   ========================================================================= */
+const title = 'Datasets';
+const description = 'Open-access datasets for economic and policy research.';
+
+/* =========================================================================
+   DATASET DATA (from datasets/index.astro)
+   ========================================================================= */
+const allDatasets = await getCollection('datasets');
+const sortedDatasetsRaw = allDatasets.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+/* =========================================================================
+   DATASET CARD LOGIC (from DatasetCard.astro — recreated inline, not imported)
+   ========================================================================= */
+const formatColors: Record<string, string> = {
+  csv: 'bg-green-100 text-green-800',
+  json: 'bg-blue-100 text-blue-800',
+  pdf: 'bg-red-100 text-red-800'
+};
+
+const sortedDatasets = sortedDatasetsRaw.map((entry) => {
+  const { title: dTitle, description: dDescription, format, source, file, date } = entry.data;
+  const formattedDate = date.toLocaleDateString('en-US', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
+  });
+  const badgeColor = formatColors[format.toLowerCase()] || 'bg-gray-100 text-gray-800';
+  const linkHref = `/datasets/${entry.id}`;
+  return { title: dTitle, description: dDescription, format, source, file, date, formattedDate, badgeColor, linkHref };
+});
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title} | BharatkiEconomy</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={`${title} | BharatkiEconomy`} />
+  <meta property="og:description" content={description} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet" />
+</head>
+<body class="min-h-screen flex flex-col bg-bg text-text-primary font-serif">
+
+  <Header />
+
+  <main class="flex-1">
+    <div class="max-w-7xl mx-auto px-6 py-12">
+      <header class="mb-12">
+        <h1 class="text-4xl font-bold font-serif text-primary-900 mb-4">Open Datasets</h1>
+        <p class="text-xl text-text-secondary max-w-3xl">Verified, publicly accessible datasets used in our research, open for public use and analysis.</p>
+      </header>
+
+      {sortedDatasets.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {sortedDatasets.map((entry) => (
+            <div class="bg-white border border-stone-200 rounded-lg p-5 flex flex-col h-full">
+              <div class="flex justify-between items-start mb-3 gap-4">
+                <a href={entry.linkHref} class="group">
+                  <h3 class="text-lg font-bold text-primary-900 font-serif group-hover:text-primary-700 transition-colors">{entry.title}</h3>
+                </a>
+                <span class={`font-sans text-xs font-bold uppercase px-2.5 py-1 rounded shrink-0 ${entry.badgeColor}`}>
+                  {entry.format}
+                </span>
+              </div>
+              <p class="text-text-secondary text-sm leading-relaxed line-clamp-2 mb-3 flex-grow">{entry.description}</p>
+              <div class="mb-4">
+                <span class="text-text-muted text-xs font-sans">Source: {entry.source}</span>
+              </div>
+              <div class="mt-auto flex justify-between items-center border-t border-stone-100 pt-3">
+                <time datetime={entry.date.toISOString()} class="font-sans text-xs text-text-muted">{entry.formattedDate}</time>
+                <a href={entry.file} download class="text-primary-700 hover:text-primary-900 font-sans text-sm font-medium flex items-center gap-1 transition-colors">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                  Download
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="py-12 text-center text-text-muted">
+          <p class="text-lg">No datasets found.</p>
+        </div>
+      )}
+    </div>
+  </main>
+
+  <Footer />
+
+</body>
+</html>

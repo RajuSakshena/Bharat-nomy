@@ -1,0 +1,133 @@
+---
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+/* =========================================================================
+   PAGE METADATA (as previously passed to BaseLayout from research/index.astro)
+   ========================================================================= */
+const title = 'Research';
+const description = 'Explore evidence-based research on Indian law, economics, and policy.';
+
+/* =========================================================================
+   RESEARCH DATA + CATEGORY FILTER LOGIC (from research/index.astro)
+   ========================================================================= */
+const allResearch = await getCollection('research', (entry) => entry.data.status === 'published');
+const sortedResearch = allResearch.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const activeCategory = Astro.url.searchParams.get('category') || undefined;
+
+const filteredResearchEntries = activeCategory
+  ? sortedResearch.filter((entry) => entry.data.category.toLowerCase() === activeCategory.toLowerCase())
+  : sortedResearch;
+
+/* Category filter pills (from CategoryFilter.astro — recreated inline, not imported) */
+const filterCategories = ['Law', 'Economics', 'Policy', 'Finance'];
+const basePath = '/research';
+
+/* =========================================================================
+   RESEARCH CARD LOGIC (from ResearchCard.astro — recreated inline, not imported)
+   ========================================================================= */
+const categoryColors: Record<string, string> = {
+  law: 'bg-amber-100 text-amber-800',
+  economics: 'bg-blue-100 text-blue-800',
+  policy: 'bg-emerald-100 text-emerald-800',
+  finance: 'bg-purple-100 text-purple-800'
+};
+
+const filteredResearch = filteredResearchEntries.map((entry) => {
+  const { title: rTitle, summary, date, category, authors } = entry.data;
+  const formattedDate = date.toLocaleDateString('en-US', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
+  });
+  const badgeColor = categoryColors[category.toLowerCase()] || 'bg-gray-100 text-gray-800';
+  const linkHref = `/research/${entry.id}`;
+  return { title: rTitle, summary, date, authors, category, formattedDate, badgeColor, linkHref };
+});
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title} | BharatkiEconomy</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={`${title} | BharatkiEconomy`} />
+  <meta property="og:description" content={description} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet" />
+</head>
+<body class="min-h-screen flex flex-col bg-bg text-text-primary font-serif">
+
+  <Header />
+
+  <main class="flex-1">
+    <div class="max-w-7xl mx-auto px-6 py-12">
+      <header class="mb-12">
+        <h1 class="text-4xl font-bold font-serif text-primary-900 mb-4">Research Hub</h1>
+        <p class="text-xl text-text-secondary max-w-3xl">Comprehensive, interdisciplinary analysis spanning law, economics, public policy, and finance.</p>
+      </header>
+
+      <div class="mb-8 border-b border-stone-200 pb-4">
+        {/* CategoryFilter (from CategoryFilter.astro), recreated inline */}
+        <div class="flex flex-wrap gap-2 my-6">
+          <a
+            href={basePath}
+            class={`font-sans text-sm font-medium px-4 py-2 rounded-full border transition-colors ${!activeCategory ? 'bg-primary-800 text-white border-primary-800' : 'bg-white text-text-secondary border-stone-300 hover:border-primary-600 hover:text-primary-700'}`}
+          >
+            All
+          </a>
+          {filterCategories.map((category) => {
+            const isActive = activeCategory === category.toLowerCase();
+            const href = `${basePath}?category=${category.toLowerCase()}`;
+
+            return (
+              <a
+                href={href}
+                class={`font-sans text-sm font-medium px-4 py-2 rounded-full border transition-colors ${isActive ? 'bg-primary-800 text-white border-primary-800' : 'bg-white text-text-secondary border-stone-300 hover:border-primary-600 hover:text-primary-700'}`}
+              >
+                {category}
+              </a>
+            );
+          })}
+        </div>
+      </div>
+
+      {filteredResearch.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredResearch.map((entry) => (
+            <div class="bg-white border border-stone-200 rounded-lg p-6 hover:shadow-md transition-shadow flex flex-col h-full">
+              <div class="mb-4">
+                <span class={`font-sans text-xs uppercase tracking-wider font-semibold px-2.5 py-1 rounded-full ${entry.badgeColor}`}>
+                  {entry.category}
+                </span>
+              </div>
+              <a href={entry.linkHref} class="group">
+                <h3 class="text-xl font-bold text-primary-900 font-serif mb-3 group-hover:text-primary-700 transition-colors">{entry.title}</h3>
+              </a>
+              <p class="text-text-secondary text-base leading-relaxed line-clamp-3 mb-6 flex-grow">{entry.summary}</p>
+              <div class="mt-auto flex justify-between items-center border-t border-stone-100 pt-4">
+                <span class="font-sans text-sm text-text-muted">{entry.authors.join(', ')}</span>
+                <time datetime={entry.date.toISOString()} class="font-sans text-sm text-text-muted">{entry.formattedDate}</time>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="py-12 text-center text-text-muted">
+          <p class="text-lg">No research papers found.</p>
+        </div>
+      )}
+    </div>
+  </main>
+
+  <Footer />
+
+</body>
+</html>

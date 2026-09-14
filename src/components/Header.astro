@@ -1,43 +1,87 @@
 ---
 const pathname = Astro.url.pathname;
+
 const navLinks = [
+  { label: 'Home', href: '/' },
   { label: 'Research', href: '/research' },
   { label: 'Datasets', href: '/datasets' },
-  { label: 'Civic Hub', href: '/civic-hub' },
-  { label: 'Market Portal', href: '/market-portal' },
+  { label: 'Dashboards', href: '/market-portal' },
   { label: 'About', href: '/about' }
 ];
 ---
 
 <header class="sticky top-0 z-50 bg-white border-b border-stone-200">
   <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-    <a href="/" class="flex items-center gap-3">
-      <div class="w-12 h-12 bg-gray-200 rounded text-gray-500 flex items-center justify-center text-xs font-bold font-sans">Logo</div>
-      <span class="font-serif text-primary-900 font-bold text-xl">BharatkiEconomy</span>
-    </a>
 
+    <!-- Brand / Logo -->
+    <a href="/" class="flex items-center gap-3">
+  <img
+    src="/images/Bharatnomy-Transparent.png"
+    alt="BharatkiEconomy"
+    class="h-26 w-auto object-contain"
+  />
+
+  <span class="font-serif text-primary-900 font-bold text-xl">
+    BharatkiEconomy
+  </span>
+</a>
+
+    <!-- Desktop Navigation -->
     <nav class="hidden md:flex gap-6">
       {navLinks.map((link) => (
-        <a 
-          href={link.href} 
-          class={`font-sans text-sm font-medium transition-colors ${pathname === link.href ? 'text-primary-900 font-bold' : 'text-text-secondary hover:text-primary-700'}`}
+        <a
+          href={link.href}
+          class={`font-sans text-sm font-medium transition-colors ${
+            pathname === link.href
+              ? 'text-primary-900 font-bold'
+              : 'text-text-secondary hover:text-primary-700'
+          }`}
         >
           {link.label}
         </a>
       ))}
     </nav>
 
-    <button id="mobile-menu-btn" class="md:hidden p-2 text-text-secondary" aria-label="Menu">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+    <!-- Mobile Menu Button -->
+    <button
+      id="mobile-menu-btn"
+      class="md:hidden p-2 text-text-secondary"
+      aria-label="Menu"
+      aria-expanded="false"
+      aria-controls="mobile-nav"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"
+        ></path>
+      </svg>
     </button>
+
   </div>
 
-  <div id="mobile-nav" class="hidden md:hidden bg-white border-t border-stone-200 px-6 py-4">
+  <!-- Mobile Navigation -->
+  <div
+    id="mobile-nav"
+    class="hidden md:hidden bg-white border-t border-stone-200 px-6 py-4"
+  >
     <nav class="flex flex-col gap-4">
       {navLinks.map((link) => (
-        <a 
-          href={link.href} 
-          class={`font-sans text-sm font-medium ${pathname === link.href ? 'text-primary-900 font-bold' : 'text-text-secondary'}`}
+        <a
+          href={link.href}
+          class={`font-sans text-sm font-medium ${
+            pathname === link.href
+              ? 'text-primary-900 font-bold'
+              : 'text-text-secondary hover:text-primary-700'
+          }`}
         >
           {link.label}
         </a>
@@ -50,9 +94,13 @@ const navLinks = [
   document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('mobile-menu-btn');
     const nav = document.getElementById('mobile-nav');
+
     if (btn && nav) {
       btn.addEventListener('click', () => {
         nav.classList.toggle('hidden');
+
+        const isOpen = !nav.classList.contains('hidden');
+        btn.setAttribute('aria-expanded', String(isOpen));
       });
     }
   });

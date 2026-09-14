@@ -1,0 +1,78 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+/* =========================================================================
+   ABOUT PAGE CONTENT (from src/content/pages/about.json)
+   ========================================================================= */
+const aboutContent = {
+  title: "About BharatkiEconomy",
+  intro: "BharatkiEconomy is an interdisciplinary research platform dedicated to evidence-based public policy and economic analysis for India. We operate at the intersection of law, economics, policy, and finance.",
+  missionFull: "Our mission is to democratize high-rigor research and datasets for all stakeholders in India's growth story. By removing paywalls and academic jargon, we empower civic and market actors with the critical information needed to make informed decisions and foster sustainable development.",
+  editorialStandards: "We maintain strict editorial independence and rigorous standards. Every piece of research begins with a clear thesis. All factual claims are supported by primary source citations. We prioritize zero-fluff directives, prioritizing clarity and accuracy over rhetoric.",
+  teamDescription: "Our diverse team of researchers, economists, legal scholars, and data scientists brings deep expertise and a shared commitment to unbiased analysis.",
+  antiAudienceStatement: "We strictly prohibit clickbait, partisan messaging, sensationalized headlines, and ad-hominem framing. Our platform serves those seeking objective truths, not echo chambers."
+};
+
+/* =========================================================================
+   PAGE METADATA (as previously passed to BaseLayout from about.astro —
+   only a title was passed, so description falls back to the same default
+   BaseLayout used: 'BharatkiEconomy — Evidence-based public policy and
+   economic research for India')
+   ========================================================================= */
+const title = aboutContent.title;
+const description = 'BharatkiEconomy — Evidence-based public policy and economic research for India';
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title} | BharatkiEconomy</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={`${title} | BharatkiEconomy`} />
+  <meta property="og:description" content={description} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet" />
+</head>
+<body class="min-h-screen flex flex-col bg-bg text-text-primary font-serif">
+
+  <Header />
+
+  <main class="flex-1">
+    <div class="max-w-4xl mx-auto px-6 py-16">
+      <h1 class="text-4xl font-bold font-serif text-primary-900 mb-6">{aboutContent.title}</h1>
+      <p class="text-xl text-text-secondary leading-relaxed mb-12">{aboutContent.intro}</p>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold text-primary-800 mb-4 border-b border-primary-200 pb-2">Our Mission</h2>
+        <p class="text-lg text-text-primary leading-relaxed">{aboutContent.missionFull}</p>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold text-primary-800 mb-4 border-b border-primary-200 pb-2">Editorial Standards</h2>
+        <div class="prose prose-stone prose-lg text-text-primary">
+          <p>{aboutContent.editorialStandards}</p>
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold text-primary-800 mb-4 border-b border-primary-200 pb-2">Our Team</h2>
+        <p class="text-lg text-text-primary leading-relaxed">{aboutContent.teamDescription}</p>
+      </section>
+
+      <section class="bg-primary-50 p-6 rounded-lg border border-primary-100">
+        <h2 class="text-xl font-bold text-primary-900 mb-3">Our Commitment to Discourse</h2>
+        <p class="text-text-secondary font-medium">{aboutContent.antiAudienceStatement}</p>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+
+</body>
+</html>

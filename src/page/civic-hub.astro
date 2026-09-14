@@ -1,0 +1,110 @@
+---
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+/* =========================================================================
+   PAGE METADATA (as previously passed to BaseLayout from civic-hub.astro)
+   ========================================================================= */
+const title = 'Civic Hub';
+const description = 'Research tailored for informed citizens, voters, and advocates.';
+
+/* =========================================================================
+   LAW + POLICY RESEARCH DATA (from civic-hub.astro)
+   ========================================================================= */
+const allResearch = await getCollection('research', (entry) => {
+  return entry.data.status === 'published' && ['law', 'policy'].includes(entry.data.category.toLowerCase());
+});
+const sortedResearchRaw = allResearch.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+/* =========================================================================
+   RESEARCH CARD LOGIC (from ResearchCard.astro — recreated inline, not imported)
+   ========================================================================= */
+const categoryColors: Record<string, string> = {
+  law: 'bg-amber-100 text-amber-800',
+  economics: 'bg-blue-100 text-blue-800',
+  policy: 'bg-emerald-100 text-emerald-800',
+  finance: 'bg-purple-100 text-purple-800'
+};
+
+const sortedResearch = sortedResearchRaw.map((entry) => {
+  const { title: rTitle, summary, date, category, authors } = entry.data;
+  const formattedDate = date.toLocaleDateString('en-US', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
+  });
+  const badgeColor = categoryColors[category.toLowerCase()] || 'bg-gray-100 text-gray-800';
+  const linkHref = `/research/${entry.id}`;
+  return { title: rTitle, summary, date, authors, category, formattedDate, badgeColor, linkHref };
+});
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title} | BharatkiEconomy</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={`${title} | BharatkiEconomy`} />
+  <meta property="og:description" content={description} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet" />
+</head>
+<body class="min-h-screen flex flex-col bg-bg text-text-primary font-serif">
+
+  <Header />
+
+  <main class="flex-1">
+    <div class="bg-primary-900 text-white py-16">
+      <div class="max-w-7xl mx-auto px-6 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold font-serif mb-4">Civic Hub</h1>
+        <p class="text-xl text-primary-200 max-w-2xl mx-auto">
+          Empowering citizens, voters, and civic advocates with accessible, evidence-based research on law and public policy.
+        </p>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 py-16">
+      <div class="mb-12 bg-primary-50 p-8 rounded-xl border border-primary-200">
+        <h2 class="text-2xl font-bold text-primary-900 mb-4">Understand This</h2>
+        <p class="text-text-secondary text-lg">
+          The Civic Hub translates complex policy and legal frameworks into plain language. Our goal is to equip you with the verified data needed to hold institutions accountable and participate meaningfully in democratic discourse.
+        </p>
+      </div>
+
+      <h2 class="text-3xl font-bold text-primary-900 mb-8">Latest Law & Policy Briefs</h2>
+      {sortedResearch.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {sortedResearch.map((entry) => (
+            <div class="bg-white border border-stone-200 rounded-lg p-6 hover:shadow-md transition-shadow flex flex-col h-full">
+              <div class="mb-4">
+                <span class={`font-sans text-xs uppercase tracking-wider font-semibold px-2.5 py-1 rounded-full ${entry.badgeColor}`}>
+                  {entry.category}
+                </span>
+              </div>
+              <a href={entry.linkHref} class="group">
+                <h3 class="text-xl font-bold text-primary-900 font-serif mb-3 group-hover:text-primary-700 transition-colors">{entry.title}</h3>
+              </a>
+              <p class="text-text-secondary text-base leading-relaxed line-clamp-3 mb-6 flex-grow">{entry.summary}</p>
+              <div class="mt-auto flex justify-between items-center border-t border-stone-100 pt-4">
+                <span class="font-sans text-sm text-text-muted">{entry.authors.join(', ')}</span>
+                <time datetime={entry.date.toISOString()} class="font-sans text-sm text-text-muted">{entry.formattedDate}</time>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p class="text-text-muted">No research papers available in this category.</p>
+      )}
+    </div>
+  </main>
+
+  <Footer />
+
+</body>
+</html>

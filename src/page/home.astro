@@ -1,0 +1,238 @@
+---
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+/* =========================================================================
+   PAGE METADATA (from BaseLayout.astro defaults, as used by index.astro's
+   <BaseLayout title="Home"> call — description uses the BaseLayout default)
+   ========================================================================= */
+const title = 'Home';
+const description = 'BharatkiEconomy — Evidence-based public policy and economic research for India';
+
+/* =========================================================================
+   HOMEPAGE CONTENT (from src/content/pages/homepage.json)
+   ========================================================================= */
+const homepageData = {
+  heroTitle: "Evidence-Based Research for India's Economic Future",
+  heroSubtitle: "Interdisciplinary analysis spanning law, economics, public policy, and finance. Rigorous research accessible to every citizen.",
+  missionStatement: "BharatkiEconomy exists to democratize high-rigor research, datasets, and economic insights for Indian citizens and market actors.",
+  missionDetail: "We combine law, economics, policy, and finance into an interdisciplinary, evidence-based research portal. Every claim is verified. Every dataset is open. Every analysis serves the public interest.",
+  civicHubTitle: "For Civic Actors",
+  civicHubDescription: "Research briefs tailored for informed voters, civic advocates, students, and youth. Complex policy made accessible through plain-language summaries and verified data.",
+  marketPortalTitle: "For Market Actors",
+  marketPortalDescription: "Analytical research for impact investors, VC fund managers, corporate ESG teams, and financial analysts. Evidence-driven insights into regulatory trends and economic indicators.",
+  editorialPrinciples: [
+    "Every publication opens with a plain-language summary of 3-4 sentences",
+    "All data points paired with inline primary source citations",
+    "Zero tolerance for unverified claims or sensationalized language",
+    "Technical terms isolated in dedicated terminology callout boxes",
+    "No partisan political messaging or clickbait patterns",
+    "All datasets published under open-access licenses"
+  ]
+};
+
+/* =========================================================================
+   LATEST RESEARCH (data fetching from index.astro, card logic from
+   ResearchCard.astro — recreated inline, not imported)
+   ========================================================================= */
+const categoryColors: Record<string, string> = {
+  law: 'bg-[#C99A2E]/10 text-[#C99A2E]',
+  economics: 'bg-[#224D95]/10 text-[#224D95]',
+  policy: 'bg-[#1F8A82]/10 text-[#1F8A82]',
+  finance: 'bg-[#8E5BA6]/10 text-[#8E5BA6]'
+};
+
+const allResearch = await getCollection('research', (entry) => entry.data.status === 'published');
+const latestResearchRaw = allResearch
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const latestResearch = latestResearchRaw.map((entry) => {
+  const { title: rTitle, summary, date, category, authors } = entry.data;
+  const formattedDate = date.toLocaleDateString('en-US', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
+  });
+  const badgeColor = categoryColors[category.toLowerCase()] || 'bg-gray-100 text-gray-800';
+  const linkHref = `/research/${entry.id}`;
+  return { title: rTitle, summary, date, authors, category, formattedDate, badgeColor, linkHref };
+});
+
+/* =========================================================================
+   LATEST DATASETS (data fetching from index.astro, card logic from
+   DatasetCard.astro — recreated inline, not imported)
+   ========================================================================= */
+const formatColors: Record<string, string> = {
+  csv: 'bg-[#1F8A82]/10 text-[#1F8A82]',
+  json: 'bg-[#224D95]/10 text-[#224D95]',
+  pdf: 'bg-[#D9695A]/10 text-[#D9695A]'
+};
+
+const allDatasets = await getCollection('datasets');
+const latestDatasetsRaw = allDatasets
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const latestDatasets = latestDatasetsRaw.map((entry) => {
+  const { title: dTitle, description: dDescription, format, source, file, date } = entry.data;
+  const formattedDate = date.toLocaleDateString('en-US', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
+  });
+  const badgeColor = formatColors[format.toLowerCase()] || 'bg-gray-100 text-gray-800';
+  const linkHref = `/datasets/${entry.id}`;
+  return { title: dTitle, description: dDescription, format, source, file, date, formattedDate, badgeColor, linkHref };
+});
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title} | BharatkiEconomy</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={`${title} | BharatkiEconomy`} />
+  <meta property="og:description" content={description} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* Direction 3 typography: force Inter/sans-serif on the Home page,
+       explicitly overriding any font-serif/Merriweather rule that may
+       come from global.css so headings, body text, metadata, links and
+       labels all render in Inter. */
+    :global(body),
+    :global(body *) {
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-bg text-text-primary font-sans" style="font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;">
+
+  <Header />
+
+  <main class="flex-1">
+    {/* HERO SECTION */}
+    <section class="bg-[#12151C] text-white py-24">
+      <div class="max-w-7xl mx-auto px-6 flex flex-col items-center text-center">
+        <div>
+          <h1 class="text-5xl font-bold font-sans tracking-tight leading-tight mb-6">{homepageData.heroTitle}</h1>
+          <p class="text-xl text-white/70 mb-8 leading-relaxed">{homepageData.heroSubtitle}</p>
+        </div>
+      </div>
+    </section>
+
+    {/* MISSION SECTION */}
+    <section class="bg-[#F5F6F8] py-24">
+      <div class="max-w-4xl mx-auto px-6 text-center">
+        <h2 class="text-3xl font-sans font-semibold tracking-tight text-[#12151C] leading-relaxed mb-6">"{homepageData.missionStatement}"</h2>
+        <p class="text-lg text-[#8A909C] leading-relaxed">{homepageData.missionDetail}</p>
+      </div>
+    </section>
+
+    {/* LATEST RESEARCH */}
+    <section class="py-20 px-6 max-w-7xl mx-auto">
+      <div class="flex justify-between items-end mb-10 border-b border-stone-200 pb-4">
+        <h2 class="text-3xl font-bold font-sans tracking-tight text-[#224D95]">Latest Research</h2>
+        <a href="/research" class="text-[#1F8A82] hover:underline font-medium font-sans">View All &rarr;</a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {latestResearch.map((entry) => (
+          <div class="bg-white border border-stone-200 rounded-md p-6 hover:shadow-md transition-shadow flex flex-col h-full">
+            <div class="mb-4">
+              <span class={`font-sans text-xs uppercase tracking-wider font-semibold px-2.5 py-1 rounded ${entry.badgeColor}`}>
+                {entry.category}
+              </span>
+            </div>
+            <a href={entry.linkHref} class="group">
+              <h3 class="text-xl font-bold font-sans text-[#224D95] mb-3 group-hover:text-[#1F8A82] transition-colors">{entry.title}</h3>
+            </a>
+            <p class="text-text-secondary text-base leading-relaxed line-clamp-3 mb-6 flex-grow">{entry.summary}</p>
+            <div class="mt-auto flex justify-between items-center border-t border-stone-100 pt-4">
+              <span class="font-sans text-sm text-[#8A909C]">{entry.authors.join(', ')}</span>
+              <time datetime={entry.date.toISOString()} class="font-sans text-sm text-[#8A909C]">{entry.formattedDate}</time>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {/* LATEST DATASETS */}
+    <section class="bg-[#F5F6F8] py-20">
+      <div class="px-6 max-w-7xl mx-auto">
+        <div class="flex justify-between items-end mb-10 border-b border-stone-200 pb-4">
+          <h2 class="text-3xl font-bold font-sans tracking-tight text-[#224D95]">Latest Datasets</h2>
+          <a href="/datasets" class="text-[#1F8A82] hover:underline font-medium font-sans">View All &rarr;</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {latestDatasets.map((entry) => (
+            <div class="bg-white border border-stone-200 rounded-md p-5 flex flex-col h-full">
+              <div class="flex justify-between items-start mb-3 gap-4">
+                <a href={entry.linkHref} class="group">
+                  <h3 class="text-lg font-bold font-sans text-[#224D95] group-hover:text-[#1F8A82] transition-colors">{entry.title}</h3>
+                </a>
+                <span class={`font-sans text-xs font-bold uppercase px-2.5 py-1 rounded shrink-0 ${entry.badgeColor}`}>
+                  {entry.format}
+                </span>
+              </div>
+              <p class="text-text-secondary text-sm leading-relaxed line-clamp-2 mb-3 flex-grow">{entry.description}</p>
+              <div class="mb-4">
+                <span class="text-[#8A909C] text-xs font-sans">Source: {entry.source}</span>
+              </div>
+              <div class="mt-auto flex justify-between items-center border-t border-stone-100 pt-3">
+                <time datetime={entry.date.toISOString()} class="font-sans text-xs text-[#8A909C]">{entry.formattedDate}</time>
+                <a href={entry.file} download class="text-[#1F8A82] hover:text-[#224D95] font-sans text-sm font-medium flex items-center gap-1 transition-colors">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                  Download
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* FOR WHOM SECTION */}
+    <section class="py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-[#F5F6F8] border border-stone-200 rounded-md p-10 flex flex-col items-start">
+          <span class="text-4xl mb-6">🏛️</span>
+          <h3 class="text-2xl font-bold font-sans text-[#224D95] mb-4">{homepageData.civicHubTitle}</h3>
+          <p class="text-text-secondary mb-8 flex-grow leading-relaxed">{homepageData.civicHubDescription}</p>
+          <a href="/civic-hub" class="text-[#1F8A82] hover:underline font-medium font-sans">Explore Civic Hub &rarr;</a>
+        </div>
+        <div class="bg-[#F5F6F8] border border-stone-200 rounded-md p-10 flex flex-col items-start">
+          <span class="text-4xl mb-6">📊</span>
+          <h3 class="text-2xl font-bold font-sans text-[#224D95] mb-4">{homepageData.marketPortalTitle}</h3>
+          <p class="text-text-secondary mb-8 flex-grow leading-relaxed">{homepageData.marketPortalDescription}</p>
+          <a href="/market-portal" class="text-[#1F8A82] hover:underline font-medium font-sans">Explore Market Portal &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    {/* EDITORIAL PRINCIPLES */}
+    <section class="bg-[#F5F6F8] py-24 border-t border-stone-200">
+      <div class="max-w-4xl mx-auto px-6">
+        <h2 class="text-3xl font-bold font-sans tracking-tight text-[#224D95] mb-10 text-center">Our Editorial Standards</h2>
+        <ul class="space-y-4">
+          {homepageData.editorialPrinciples.map((principle) => (
+            <li class="flex items-start">
+              <svg class="w-6 h-6 text-[#1F8A82] mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              <span class="text-lg text-text-primary">{principle}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+
+</body>
+</html>
