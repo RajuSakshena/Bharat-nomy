@@ -4,72 +4,120 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
 /* =========================================================================
-   ABOUT PAGE CONTENT (from src/content/pages/about.json)
+   PAGE METADATA
    ========================================================================= */
-const aboutContent = {
-  title: "About BharatkiEconomy",
-  intro: "BharatkiEconomy is an interdisciplinary research platform dedicated to evidence-based public policy and economic analysis for India. We operate at the intersection of law, economics, policy, and finance.",
-  missionFull: "Our mission is to democratize high-rigor research and datasets for all stakeholders in India's growth story. By removing paywalls and academic jargon, we empower civic and market actors with the critical information needed to make informed decisions and foster sustainable development.",
-  editorialStandards: "We maintain strict editorial independence and rigorous standards. Every piece of research begins with a clear thesis. All factual claims are supported by primary source citations. We prioritize zero-fluff directives, prioritizing clarity and accuracy over rhetoric.",
-  teamDescription: "Our diverse team of researchers, economists, legal scholars, and data scientists brings deep expertise and a shared commitment to unbiased analysis.",
-  antiAudienceStatement: "We strictly prohibit clickbait, partisan messaging, sensationalized headlines, and ad-hominem framing. Our platform serves those seeking objective truths, not echo chambers."
-};
-
-/* =========================================================================
-   PAGE METADATA (as previously passed to BaseLayout from about.astro —
-   only a title was passed, so description falls back to the same default
-   BaseLayout used: 'BharatkiEconomy — Evidence-based public policy and
-   economic research for India')
-   ========================================================================= */
-const title = aboutContent.title;
-const description = 'BharatkiEconomy — Evidence-based public policy and economic research for India';
+const title = 'About';
+const description =
+  "Bharatnomy is an independent research firm studying India's economy as a connected system.";
 ---
 
 <!doctype html>
 <html lang="en">
 <head>
+  <script is:inline>
+    /* Force the About page to start at the very top on a fresh
+       load/refresh. Scoped to this page only (inline in about.astro),
+       so it has no effect on any other page's scroll behaviour. */
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    window.addEventListener('load', () => {
+      window.scrollTo(0, 0);
+    });
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{title} | BharatkiEconomy</title>
+  <title>{title} | Bharatnomy</title>
   <meta name="description" content={description} />
-  <meta property="og:title" content={`${title} | BharatkiEconomy`} />
+  <meta property="og:title" content={`${title} | Bharatnomy`} />
   <meta property="og:description" content={description} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* Match the Research/Datasets/Dashboards pages' typography direction:
+       force Inter/sans-serif, overriding any font-serif/Merriweather rule
+       that may come from global.css. */
+    :global(body),
+    :global(body *) {
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+    }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col bg-bg text-text-primary font-serif">
+<body class="min-h-screen flex flex-col bg-bg text-text-primary font-sans" style="font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;">
 
   <Header />
 
   <main class="flex-1">
-    <div class="max-w-4xl mx-auto px-6 py-16">
-      <h1 class="text-4xl font-bold font-serif text-primary-900 mb-6">{aboutContent.title}</h1>
-      <p class="text-xl text-text-secondary leading-relaxed mb-12">{aboutContent.intro}</p>
+    {/* PAGE HEADING */}
+    <section class="bg-white py-20 md:py-24 border-b border-stone-200">
+      <div class="max-w-4xl mx-auto px-6">
+        <h1 class="text-4xl md:text-5xl font-bold font-sans tracking-tight text-[#12151C] mb-4">About</h1>
+      </div>
+    </section>
 
-      <section class="mb-12">
-        <h2 class="text-2xl font-bold text-primary-800 mb-4 border-b border-primary-200 pb-2">Our Mission</h2>
-        <p class="text-lg text-text-primary leading-relaxed">{aboutContent.missionFull}</p>
-      </section>
+    {/* OPENING */}
+    <section class="bg-white py-16 md:py-20">
+      <div class="max-w-4xl mx-auto px-6 space-y-6">
+        <p class="text-lg text-text-primary leading-relaxed">
+          Bharatnomy is an independent research firm studying India's economy as a system — where climate, energy, capital markets, and public policy are treated as connected, because they are.
+        </p>
+        <p class="text-lg text-text-primary leading-relaxed">
+          We started Bharatnomy because most research on India's economy is built to serve one audience: other specialists. We're building ours for a wider one — investors, civil servants, journalists, and anyone who wants to understand how the country actually works, not just what happened this week.
+        </p>
+      </div>
+    </section>
 
-      <section class="mb-12">
-        <h2 class="text-2xl font-bold text-primary-800 mb-4 border-b border-primary-200 pb-2">Editorial Standards</h2>
-        <div class="prose prose-stone prose-lg text-text-primary">
-          <p>{aboutContent.editorialStandards}</p>
+    {/* HOW WE THINK */}
+    <section class="bg-[#F5F6F8] py-16 md:py-20">
+      <div class="max-w-4xl mx-auto px-6">
+        <h2 class="text-2xl md:text-3xl font-bold font-sans tracking-tight text-[#224D95] mb-6">How we think</h2>
+        <div class="space-y-6">
+          <p class="text-lg text-text-primary leading-relaxed">
+            Siloed analysis misses how India's economy actually behaves. A heatwave is a climate story, an energy story, an agriculture story, and a fiscal story, all at once — and research that only tells one of those stories tells an incomplete one. Our work is built across disciplines from the start: law, economics, policy, and finance, in the same room, on the same questions.
+          </p>
+          <p class="text-lg text-text-primary leading-relaxed">
+            We're independent, and we intend to stay that way. That shows up in how we work, not in a mission statement — in what we choose to study, who funds it, and how plainly we're willing to write it.
+          </p>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="mb-12">
-        <h2 class="text-2xl font-bold text-primary-800 mb-4 border-b border-primary-200 pb-2">Our Team</h2>
-        <p class="text-lg text-text-primary leading-relaxed">{aboutContent.teamDescription}</p>
-      </section>
+    {/* THE TEAM */}
+    <section class="bg-white py-16 md:py-20">
+      <div class="max-w-4xl mx-auto px-6">
+        <h2 class="text-2xl md:text-3xl font-bold font-sans tracking-tight text-[#224D95] mb-10">The team</h2>
 
-      <section class="bg-primary-50 p-6 rounded-lg border border-primary-100">
-        <h2 class="text-xl font-bold text-primary-900 mb-3">Our Commitment to Discourse</h2>
-        <p class="text-text-secondary font-medium">{aboutContent.antiAudienceStatement}</p>
-      </section>
-    </div>
+        <div class="space-y-8">
+          <div class="border border-stone-200 rounded-lg p-6 md:p-8">
+            <h3 class="text-xl font-bold font-sans text-[#12151C] mb-3">S — Partner</h3>
+            <p class="text-lg text-text-primary leading-relaxed">
+              S's background is in finance and wealth management, bringing a practitioner's read on capital markets and how policy decisions actually move money — not just how they're supposed to.
+            </p>
+          </div>
+
+          <div class="border border-stone-200 rounded-lg p-6 md:p-8">
+            <h3 class="text-xl font-bold font-sans text-[#12151C] mb-3">K — Partner</h3>
+            <p class="text-lg text-text-primary leading-relaxed">
+              K is a policy and social impact professional who runs his own think tank. He previously worked with the World Bank in Washington, D.C. and with the Maharashtra government, and studied public policy at the University of Chicago. His work sits at the intersection of institutional design and on-the-ground implementation.
+            </p>
+          </div>
+
+          <div class="border border-stone-200 rounded-lg p-6 md:p-8">
+            <h3 class="text-xl font-bold font-sans text-[#12151C] mb-3">SN — Partner &amp; CEO</h3>
+            <p class="text-lg text-text-primary leading-relaxed">
+              SN trained originally in the natural sciences, with a master's degree in medical nanotechnology, before moving into policy research. He studied public policy at the University of Chicago and has since focused on qualitative, field-based research — bringing a scientist's rigor to questions that don't usually get that kind of scrutiny.
+            </p>
+          </div>
+        </div>
+
+        <p class="text-base text-[#8A909C] leading-relaxed mt-10">
+          Bharatnomy is a young firm. We think that's worth saying plainly, not hiding.
+        </p>
+      </div>
+    </section>
   </main>
 
   <Footer />

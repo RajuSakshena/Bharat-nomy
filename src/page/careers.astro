@@ -1,0 +1,109 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+/* =========================================================================
+   PAGE METADATA
+   ========================================================================= */
+const title = 'Careers';
+const description =
+  "Join Bharatnomy and help shape an independent research firm studying India's economy as a connected system.";
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <script is:inline>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    window.addEventListener('load', () => {
+      window.scrollTo(0, 0);
+    });
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>{title} | Bharatnomy</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={`${title} | Bharatnomy`} />
+  <meta property="og:description" content={description} />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :global(body),
+    :global(body *) {
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+    }
+  </style>
+</head>
+
+<body
+  class="min-h-screen flex flex-col bg-bg text-text-primary font-sans"
+  style="font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;"
+>
+  <Header />
+
+  <main class="flex-1">
+    <!-- PAGE HEADING -->
+    <section class="bg-white py-20 md:py-24 border-b border-stone-200">
+      <div class="max-w-4xl mx-auto px-6">
+        <h1
+          class="text-4xl md:text-5xl font-bold font-sans tracking-tight text-[#12151C] mb-4"
+        >
+          Join us
+        </h1>
+
+        <p class="text-lg md:text-xl text-[#8A909C] leading-relaxed">
+          We're building the team. Early is the best time to shape what this becomes.
+        </p>
+      </div>
+    </section>
+
+    <!-- BODY -->
+    <section class="bg-[#F5F6F8] py-16 md:py-20">
+      <div class="max-w-4xl mx-auto px-6 space-y-6">
+
+        <p class="text-lg text-[#12151C] leading-relaxed">
+          Bharatnomy is a young firm, which means the people who join now will have an
+          outsized hand in what it becomes — not just the research, but how we work,
+          what we prioritize, and what "rigorous but readable" ends up meaning in practice.
+        </p>
+
+        <p class="text-lg text-[#12151C] leading-relaxed">
+          We're not running a formal hiring process yet, but we're always interested in
+          hearing from people who think across disciplines rather than staying in one lane —
+          economists who read policy, policy people who understand markets, researchers who
+          can write for a reader who isn't a specialist.
+        </p>
+
+        <p class="text-lg text-[#12151C] leading-relaxed">
+          If that's you,
+          <a
+            href="mailto:namaste@bharatnomy.com"
+            class="text-[#1F8A82] font-semibold underline underline-offset-2 hover:text-[#17685f] transition-colors"
+            aria-label="Email Bharatnomy at namaste@bharatnomy.com"
+          >
+            reach out
+          </a>
+          — tell us what you'd want to work on, not just what you've done.
+        </p>
+
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</body>
+</html>

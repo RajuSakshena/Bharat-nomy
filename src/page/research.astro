@@ -1,130 +1,144 @@
 ---
 import '../styles/global.css';
-import { getCollection } from 'astro:content';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
 /* =========================================================================
-   PAGE METADATA (as previously passed to BaseLayout from research/index.astro)
+   PAGE METADATA
    ========================================================================= */
 const title = 'Research';
-const description = 'Explore evidence-based research on Indian law, economics, and policy.';
+const description =
+  'Independent research on India’s economy, policy, markets, and connected systems.';
 
 /* =========================================================================
-   RESEARCH DATA + CATEGORY FILTER LOGIC (from research/index.astro)
+   STATIC EDITORIAL CONTENT
    ========================================================================= */
-const allResearch = await getCollection('research', (entry) => entry.data.status === 'published');
-const sortedResearch = allResearch.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const outputForms = [
+  {
+    title: 'Working papers',
+    description: 'The deep, technical version, for readers who want the full method.'
+  },
+  {
+    title: 'Reports',
+    description: 'Longer-form, structured analysis meant to stand on its own.'
+  },
+  {
+    title: 'Policy briefs',
+    description: "Short, direct, built for people who need the conclusion and the 'so what' fast."
+  }
+];
 
-const activeCategory = Astro.url.searchParams.get('category') || undefined;
-
-const filteredResearchEntries = activeCategory
-  ? sortedResearch.filter((entry) => entry.data.category.toLowerCase() === activeCategory.toLowerCase())
-  : sortedResearch;
-
-/* Category filter pills (from CategoryFilter.astro — recreated inline, not imported) */
-const filterCategories = ['Law', 'Economics', 'Policy', 'Finance'];
-const basePath = '/research';
-
-/* =========================================================================
-   RESEARCH CARD LOGIC (from ResearchCard.astro — recreated inline, not imported)
-   ========================================================================= */
-const categoryColors: Record<string, string> = {
-  law: 'bg-amber-100 text-amber-800',
-  economics: 'bg-blue-100 text-blue-800',
-  policy: 'bg-emerald-100 text-emerald-800',
-  finance: 'bg-purple-100 text-purple-800'
+const activeProject = {
+  title: 'Tracking Heat Action Plans across Maharashtra',
+  description:
+    "India's districts are increasingly required to have Heat Action Plans — but having a plan and implementing one are different things. We're building a district-by-district picture of what's on paper versus what's actually happening on the ground. Still in the research phase — more soon."
 };
-
-const filteredResearch = filteredResearchEntries.map((entry) => {
-  const { title: rTitle, summary, date, category, authors } = entry.data;
-  const formattedDate = date.toLocaleDateString('en-US', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric'
-  });
-  const badgeColor = categoryColors[category.toLowerCase()] || 'bg-gray-100 text-gray-800';
-  const linkHref = `/research/${entry.id}`;
-  return { title: rTitle, summary, date, authors, category, formattedDate, badgeColor, linkHref };
-});
 ---
 
 <!doctype html>
 <html lang="en">
 <head>
+  <script is:inline>
+    /* Force the Research page to start at the very top on a fresh
+       load/refresh. Scoped to this page only (inline in research.astro),
+       so it has no effect on any other page's scroll behaviour. */
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    window.addEventListener('load', () => {
+      window.scrollTo(0, 0);
+    });
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{title} | BharatkiEconomy</title>
+  <title>{title} | Bharatnomy</title>
   <meta name="description" content={description} />
-  <meta property="og:title" content={`${title} | BharatkiEconomy`} />
+  <meta property="og:title" content={`${title} | Bharatnomy`} />
   <meta property="og:description" content={description} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* Match the Home page's typography direction: force Inter/sans-serif,
+       overriding any font-serif/Merriweather rule that may come from
+       global.css, so headings, body text, and labels all render in Inter. */
+    :global(body),
+    :global(body *) {
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+    }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col bg-bg text-text-primary font-serif">
+<body class="min-h-screen flex flex-col bg-bg text-text-primary font-sans" style="font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;">
 
   <Header />
 
   <main class="flex-1">
-    <div class="max-w-7xl mx-auto px-6 py-12">
-      <header class="mb-12">
-        <h1 class="text-4xl font-bold font-serif text-primary-900 mb-4">Research Hub</h1>
-        <p class="text-xl text-text-secondary max-w-3xl">Comprehensive, interdisciplinary analysis spanning law, economics, public policy, and finance.</p>
-      </header>
-
-      <div class="mb-8 border-b border-stone-200 pb-4">
-        {/* CategoryFilter (from CategoryFilter.astro), recreated inline */}
-        <div class="flex flex-wrap gap-2 my-6">
-          <a
-            href={basePath}
-            class={`font-sans text-sm font-medium px-4 py-2 rounded-full border transition-colors ${!activeCategory ? 'bg-primary-800 text-white border-primary-800' : 'bg-white text-text-secondary border-stone-300 hover:border-primary-600 hover:text-primary-700'}`}
-          >
-            All
-          </a>
-          {filterCategories.map((category) => {
-            const isActive = activeCategory === category.toLowerCase();
-            const href = `${basePath}?category=${category.toLowerCase()}`;
-
-            return (
-              <a
-                href={href}
-                class={`font-sans text-sm font-medium px-4 py-2 rounded-full border transition-colors ${isActive ? 'bg-primary-800 text-white border-primary-800' : 'bg-white text-text-secondary border-stone-300 hover:border-primary-600 hover:text-primary-700'}`}
-              >
-                {category}
-              </a>
-            );
-          })}
-        </div>
+    {/* PAGE HEADING */}
+    <section class="bg-white py-20 md:py-24 border-b border-stone-200">
+      <div class="max-w-4xl mx-auto px-6">
+        <h1 class="text-4xl md:text-5xl font-bold font-sans tracking-tight text-[#12151C] mb-4">Research</h1>
+        <p class="text-lg md:text-xl text-[#8A909C] leading-relaxed">We're early. Here's how we work, and what's coming.</p>
       </div>
+    </section>
 
-      {filteredResearch.length > 0 ? (
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredResearch.map((entry) => (
-            <div class="bg-white border border-stone-200 rounded-lg p-6 hover:shadow-md transition-shadow flex flex-col h-full">
-              <div class="mb-4">
-                <span class={`font-sans text-xs uppercase tracking-wider font-semibold px-2.5 py-1 rounded-full ${entry.badgeColor}`}>
-                  {entry.category}
-                </span>
-              </div>
-              <a href={entry.linkHref} class="group">
-                <h3 class="text-xl font-bold text-primary-900 font-serif mb-3 group-hover:text-primary-700 transition-colors">{entry.title}</h3>
-              </a>
-              <p class="text-text-secondary text-base leading-relaxed line-clamp-3 mb-6 flex-grow">{entry.summary}</p>
-              <div class="mt-auto flex justify-between items-center border-t border-stone-100 pt-4">
-                <span class="font-sans text-sm text-text-muted">{entry.authors.join(', ')}</span>
-                <time datetime={entry.date.toISOString()} class="font-sans text-sm text-text-muted">{entry.formattedDate}</time>
-              </div>
+    {/* INTRO */}
+    <section class="bg-white py-16 md:py-20">
+      <div class="max-w-4xl mx-auto px-6">
+        <p class="text-lg text-text-primary leading-relaxed">
+          Bharatnomy doesn't have a publication history yet — we're a new firm, and we'd rather tell you that directly than pretend otherwise. What we do have is a method, a set of questions we think are underexamined, and a first project already underway.
+        </p>
+      </div>
+    </section>
+
+    {/* OUR APPROACH */}
+    <section class="bg-[#F5F6F8] py-16 md:py-20">
+      <div class="max-w-4xl mx-auto px-6">
+        <h2 class="text-2xl md:text-3xl font-bold font-sans tracking-tight text-[#224D95] mb-6">Our approach</h2>
+        <p class="text-lg text-text-primary leading-relaxed mb-10">
+          Every piece of research we publish will sit in one (or more) of five areas: climate adaptation and resilience, energy policy and markets, India's macroeconomic health, equity markets, and commodity markets. We treat these as connected, not separate — a paper on energy policy will often touch fiscal capacity; a paper on climate resilience will often touch capital markets.
+        </p>
+
+        <p class="text-base font-semibold font-sans text-[#12151C] mb-6">Our output will take three forms:</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {outputForms.map((form) => (
+            <div class="bg-white border border-stone-200 rounded-lg p-6">
+              <h3 class="text-lg font-bold font-sans text-[#224D95] mb-3">{form.title}</h3>
+              <p class="text-text-secondary text-base leading-relaxed">{form.description}</p>
             </div>
           ))}
         </div>
-      ) : (
-        <div class="py-12 text-center text-text-muted">
-          <p class="text-lg">No research papers found.</p>
+      </div>
+    </section>
+
+    {/* CURRENTLY IN PROGRESS */}
+    <section class="bg-white py-16 md:py-20">
+      <div class="max-w-4xl mx-auto px-6">
+        <h2 class="text-2xl md:text-3xl font-bold font-sans tracking-tight text-[#224D95] mb-8">Currently in progress</h2>
+
+        <div class="bg-[#F5F6F8] border-l-4 border-[#1F8A82] rounded-r-lg p-6 md:p-8">
+          <h3 class="text-xl font-bold font-sans text-[#12151C] mb-4">{activeProject.title}</h3>
+          <p class="text-text-secondary text-base md:text-lg leading-relaxed">{activeProject.description}</p>
         </div>
-      )}
-    </div>
+      </div>
+    </section>
+
+    {/* CLOSING / SUBSCRIBE CTA */}
+    <section class="bg-[#12151C] py-16 md:py-20">
+      <div class="max-w-3xl mx-auto px-6 text-center">
+        <p class="text-lg md:text-xl text-white/80 leading-relaxed mb-8">
+          Want to know when our first paper is out? We'll only email when there's something real to share.
+        </p>
+        <button
+          type="button"
+          class="inline-block px-8 py-3 rounded-md bg-[#1F8A82] text-white font-semibold font-sans hover:bg-[#1a7871] transition-colors"
+        >
+          Subscribe
+        </button>
+      </div>
+    </section>
   </main>
 
   <Footer />

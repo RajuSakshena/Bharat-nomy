@@ -1,0 +1,104 @@
+    ---
+    import '../styles/global.css';
+    import Header from '../components/Header.astro';
+    import Footer from '../components/Footer.astro';
+
+    /* =========================================================================
+    PAGE METADATA
+    ========================================================================= */
+    const title = 'Editorial Standards';
+    const description =
+    'The standards behind everything Bharatnomy publishes.';
+
+    const standards = [
+    {
+        heading: 'Independence',
+        text: 'Bharatnomy is not affiliated with any political party, government body, or advocacy organization. We choose our research questions based on what we think matters, not on what serves a particular outcome.',
+    },
+    {
+        heading: 'Methodology, shown not just claimed',
+        text: "Every working paper and report will include a clear account of our data sources and methods — including their limitations. If a number is uncertain, we'll say so, rather than presenting false precision.",
+    },
+    {
+        heading: 'Sourcing',
+        text: 'We rely on primary data wherever possible — government data, original surveys, and direct fieldwork — and we cite our sources plainly enough that a reader can check our work themselves.',
+    },
+    {
+        heading: 'Corrections',
+        text: "If we get something wrong, we'll say so publicly, with a visible correction note, not a silent edit.",
+    },
+    {
+        heading: 'Funding transparency',
+        text: "Details of Bharatnomy's funding and ownership structure will be published here once finalized.",
+    },
+    ];
+    ---
+
+    <!doctype html>
+    <html lang="en">
+    <head>
+    <script is:inline>
+        /* Force the Editorial Standards page to start at the very top on a
+        fresh load/refresh. Scoped to this page only (inline in
+        editorial-standards.astro), so it has no effect on any other
+        page's scroll behaviour. */
+        if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+        }
+
+        window.addEventListener('load', () => {
+        window.scrollTo(0, 0);
+        });
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | Bharatnomy</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={`${title} | Bharatnomy`} />
+    <meta property="og:description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        /* Match the Research/Datasets/Dashboards/About pages' typography
+        direction: force Inter/sans-serif, overriding any
+        font-serif/Merriweather rule that may come from global.css. */
+        :global(body),
+        :global(body *) {
+        font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+        }
+    </style>
+    </head>
+    <body class="min-h-screen flex flex-col bg-bg text-text-primary font-sans" style="font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;">
+
+    <Header />
+
+    <main class="flex-1">
+        {/* PAGE HEADING */}
+        <section class="bg-white py-20 md:py-24 border-b border-stone-200">
+        <div class="max-w-4xl mx-auto px-6">
+            <h1 class="text-4xl md:text-5xl font-bold font-sans tracking-tight text-[#12151C] mb-4">How we work</h1>
+            <p class="text-lg md:text-xl text-[#8A909C] leading-relaxed">The standards behind everything we publish.</p>
+        </div>
+        </section>
+
+        {/* STANDARDS */}
+        <section class="bg-white py-16 md:py-20">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="space-y-8">
+            {standards.map((standard) => (
+                <div class="border border-stone-200 rounded-lg p-6 md:p-8 bg-[#F5F6F8]">
+                <h2 class="text-xl md:text-2xl font-bold font-sans tracking-tight text-[#224D95] mb-3">{standard.heading}</h2>
+                <p class="text-lg text-[#12151C] leading-relaxed">{standard.text}</p>
+                </div>
+            ))}
+            </div>
+        </div>
+        </section>
+    </main>
+
+    <Footer />
+
+    </body>
+    </html>
